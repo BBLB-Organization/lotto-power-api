@@ -1,17 +1,24 @@
-# h2 DB config
+# MySQL DB config
+server:
+  port: 5000
+
 spring:
   datasource:
-    url: jdbc:h2:mem:mydb;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
-    username: sa
-    password: password
-    driverClassName: org.h2.Driver
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    hikari:
+      maximum-pool-size: 2
+  jackson:
+    serialization:
+      indent_output: true
+      fail-on-empty-beans: false
   jpa:
-    defer-datasource-initialization: true
-    hibernate.ddl-auto: none
-  h2:
-    console.enabled: true
-
-  spring:
-    jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
       hibernate:
-        use-new-id-generator-mappings: false
+        format_sql: true
+
+
