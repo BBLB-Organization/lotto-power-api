@@ -1,12 +1,9 @@
 # MySQL DB config
-server:
-  port: 5000
-
 spring:
   datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
+    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}
+    username: ${MYSQLUSER}
+    password: ${MYSQLPASSWORD}
     hikari:
       maximum-pool-size: 2
   jackson:
