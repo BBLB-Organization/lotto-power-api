@@ -6,6 +6,7 @@ import javax.persistence.*;
 public class Users {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Integer id;
 
     String username;
