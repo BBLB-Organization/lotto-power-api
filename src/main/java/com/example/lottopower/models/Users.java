@@ -10,14 +10,16 @@ public class Users {
     Integer id;
 
     String username;
+    String emailAddress;
     String password;
     String roles;
 
     public Users(){}
 
-    public Users(Integer id, String username, String password, String roles) {
+    public Users(Integer id, String username, String emailAddress, String password, String roles) {
         this.id = id;
         this.username = username;
+        this.emailAddress = emailAddress;
         this.password = password;
         this.roles = roles;
     }
@@ -36,6 +38,14 @@ public class Users {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
     public String getPassword() {return password;}

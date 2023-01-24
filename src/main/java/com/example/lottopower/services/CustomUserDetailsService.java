@@ -18,27 +18,20 @@ import java.util.List;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public CustomUserDetailsService(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users users = userRepository.findByUsername(username);
-        if (users == null) {
-            throw new UsernameNotFoundException("Invalid username or password.");
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Users user = userRepository.findByEmailAddress(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
         }
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(users.getRoles()));
-
-        return new User(users.getUsername(), users.getPassword(), authorities);
+        return new User(user.getEmailAddress(), user.getPassword(), new ArrayList<>());
     }
 
-    public Users save(Users users) {
-        users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
-        return userRepository.save(users);
-    }
 }
 
