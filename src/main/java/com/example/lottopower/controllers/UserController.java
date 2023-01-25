@@ -5,10 +5,9 @@ import com.example.lottopower.models.Users;
 import com.example.lottopower.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,19 +23,32 @@ public class UserController {
         this.userService = userService;
     }
 
+
     @PostMapping("register-user")
-    public Users registerUser(@RequestBody Users users){
+    public ResponseEntity registerUser(@RequestBody Users users){
         users.setRoles(ROLE_USER);
-        return this.userService.registerUser(users);
+        Users user = this.userService.registerUser(users);
+
+        HttpStatus status;
+        ResponseEntity response;
+        if(user != null){
+            status = HttpStatus.OK;
+            response = new ResponseEntity(user,status);
+        }else{
+            status  = HttpStatus.BAD_REQUEST;
+            response = new ResponseEntity("USER NOT ADDED",status);
+        }
+        return response;
     }
 
     @PostMapping("login")
     public ResponseEntity<String> checkLoginCredentials(@RequestBody Users user) {
+        String [] roles = {"ROLE_USER"};
+        String token = TokenGenerator.generateToken(user.getEmailAddress(), roles);
         try {
             if (userService.checkLoginCredentials(user.getEmailAddress(), user.getPassword())) {
-                String [] roles = {"ROLE_USER"};
-                String token = TokenGenerator.generateToken(user.getEmailAddress(), roles);
-                return new ResponseEntity<>("Login Successful, here is your token: "+token, HttpStatus.OK);
+                userService.updateAccessTokenForUserLoggedIn(user.getEmailAddress(),token);
+                return new ResponseEntity<>(token, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Incorrect Email or Password", HttpStatus.UNAUTHORIZED);
             }
@@ -46,9 +58,18 @@ public class UserController {
     }
 
     @GetMapping("all")
-    //@PreAuthorize("hasRole('ROLE_USER')")
-    public List<Users> getAllUsers(){
-        return this.userService.getAllUsers();
+    public ResponseEntity<List<Users>> getAllUsers(@RequestBody Users userWithAccessToken){
+        List<Users> allUsers = new ArrayList<>();
+        try {
+            if (userService.isAuthenticated(userWithAccessToken)) {
+                allUsers = this.userService.getAllUsers();
+                return new ResponseEntity<>(allUsers, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(allUsers, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(allUsers, HttpStatus.BAD_REQUEST);
+        }
     }
 
 

@@ -3,7 +3,7 @@ package com.example.lottopower.models;
 import javax.persistence.*;
 
 @Entity
-public class Users {
+public class Users{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,15 +13,17 @@ public class Users {
     String emailAddress;
     String password;
     String roles;
+    String accessToken;
 
     public Users(){}
 
-    public Users(Integer id, String username, String emailAddress, String password, String roles) {
+    public Users(Integer id, String username, String emailAddress, String password, String roles, String accessToken) {
         this.id = id;
         this.username = username;
         this.emailAddress = emailAddress;
         this.password = password;
         this.roles = roles;
+        this.accessToken = accessToken;
     }
 
     public Integer getId() {
@@ -55,4 +57,12 @@ public class Users {
     public String getRoles() { return roles; }
 
     public void setRoles(String roles) {this.roles = roles;}
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 }

@@ -1,6 +1,5 @@
 package com.example.lottopower.config;
 
-import com.example.lottopower.models.Users;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
@@ -23,7 +22,7 @@ public class TokenGenerator {
                 .signWith(SignatureAlgorithm.HS512, SECRET)
                 .compact();
 
-        return TOKEN_PREFIX + " " + jwt;
+        return jwt;
     }
 }
 
