@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Content-Type"));
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:4200","https://bblb-organization.github.io/lottery-ai/"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:4200","https://bblb-organization.github.io"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
