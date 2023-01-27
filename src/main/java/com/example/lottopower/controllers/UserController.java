@@ -3,7 +3,10 @@ package com.example.lottopower.controllers;
 import com.example.lottopower.config.TokenGenerator;
 import com.example.lottopower.models.Users;
 import com.example.lottopower.services.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,18 +43,20 @@ public class UserController {
         return response;
     }
 
-    @PostMapping("login")
+    @PostMapping(path = "login", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> checkLoginCredentials(@RequestBody Users user) {
         String [] roles = {"ROLE_USER"};
         String token = TokenGenerator.generateToken(user.getEmailAddress(), roles);
         try {
             if (userService.checkLoginCredentials(user.getEmailAddress(), user.getPassword())) {
                 userService.updateAccessTokenForUserLoggedIn(user.getEmailAddress(),token);
-                return new ResponseEntity<>(token, HttpStatus.OK);
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonToken = objectMapper.writeValueAsString(token);
+                return new ResponseEntity<>(jsonToken, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Incorrect Email or Password", HttpStatus.UNAUTHORIZED);
             }
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | JsonProcessingException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
