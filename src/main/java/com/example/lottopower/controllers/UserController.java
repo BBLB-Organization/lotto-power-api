@@ -3,6 +3,7 @@ package com.example.lottopower.controllers;
 import com.example.lottopower.config.TokenGenerator;
 import com.example.lottopower.models.Users;
 import com.example.lottopower.services.UserService;
+import com.example.lottopower.services.UserStatsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,13 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
+    private UserStatsService userStatsService;
 
     private static final String ROLE_USER = "ROLE_USER";
 
-    public UserController(UserService userService){
+    public UserController(UserService userService, UserStatsService userStatsService){
         this.userService = userService;
+        this.userStatsService = userStatsService;
     }
 
 
@@ -30,6 +33,9 @@ public class UserController {
     public ResponseEntity registerUser(@RequestBody Users users){
         users.setRoles(ROLE_USER);
         Users user = this.userService.registerUser(users);
+
+        //Create blank user stats for new registered user
+        this.userStatsService.createUserStats(user.getEmailAddress());
 
         HttpStatus status;
         ResponseEntity response;

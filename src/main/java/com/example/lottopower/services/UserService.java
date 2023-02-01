@@ -77,8 +77,8 @@ public class UserService {
         }
     }
 
-    public Users getUserByEmailAddress(String emailAddress){
-        Users user = userRepository.findByEmailAddress(emailAddress);
+    public Users getUserByUserName(String username){
+        Users user = this.userRepository.findByUsername(username);
         return user;
     }
 
