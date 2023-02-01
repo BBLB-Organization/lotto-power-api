@@ -35,7 +35,7 @@ public class UserController {
         Users user = this.userService.registerUser(users);
 
         //Create blank user stats for new registered user
-        this.userStatsService.createUserStats(user.getEmailAddress());
+        this.userStatsService.createUserStats(user.getUsername());
 
         HttpStatus status;
         ResponseEntity response;

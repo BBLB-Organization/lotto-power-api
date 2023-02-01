@@ -20,19 +20,19 @@ public class UserStatsService {
         this.userStatsRepository = userStatsRepository;
     }
 
-    public UserStats getUserStats(String emailAddress){
-        UserStats userStats = this.userStatsRepository.findByEmailAddress(emailAddress);
+    public UserStats getUserStats(String username){
+        UserStats userStats = this.userStatsRepository.findByUsername(username);
         return userStats;
     }
 
-    public UserStats createUserStats(String emailAddress){
+    public UserStats createUserStats(String username){
         Integer initialValue = 0;
         UserStats userStats = new UserStats();
         LocalDate dateAccountCreated = LocalDate.now();
         LocalDate dateLastSeen = LocalDate.now();
 
         //Setting initial values
-        userStats.setEmailAddress(emailAddress);
+        userStats.setUsername(username);
         userStats.setJoinedDate(dateAccountCreated);
         userStats.setLastSeenDate(dateLastSeen);
         userStats.setTotalMoneySpent(initialValue);
@@ -49,7 +49,27 @@ public class UserStatsService {
 
         //Saves user stats to database
         return this.userStatsRepository.save(userStats);
+    }
 
+    public UserStats updateUserStats(UserStats oldUserStats){
+        UserStats updatedUserStats = this.userStatsRepository.findByUsername(oldUserStats.getUsername());
+
+        //Sets new users stats based on what the user does
+        updatedUserStats.setLastSeenDate(oldUserStats.getLastSeenDate());
+        updatedUserStats.setTotalMoneySpent(oldUserStats.getTotalMoneySpent());
+        updatedUserStats.setTotalMatchedTwoWinnings(oldUserStats.getTotalMatchedTwoWinnings());
+        updatedUserStats.setTotalMatchedThreeWinnings(oldUserStats.getTotalMatchedThreeWinnings());
+        updatedUserStats.setTotalMatchedFourWinnings(oldUserStats.getTotalMatchedFourWinnings());
+        updatedUserStats.setTotalMatchedFiveWinnings(oldUserStats.getTotalMatchedFiveWinnings());
+        updatedUserStats.setTotalGamesPlayed(oldUserStats.getTotalGamesPlayed());
+        updatedUserStats.setTotalGamesWon(oldUserStats.getTotalGamesWon());
+        updatedUserStats.setTotalGamesWonWhereMatchedTwo(oldUserStats.getTotalGamesWonWhereMatchedTwo());
+        updatedUserStats.setTotalGamesWonWhereMatchedThree(oldUserStats.getTotalGamesWonWhereMatchedThree());
+        updatedUserStats.setTotalGamesWonWhereMatchedFour(oldUserStats.getTotalGamesWonWhereMatchedFour());
+        updatedUserStats.setTotalGamesWonWhereMatchedFive(oldUserStats.getTotalGamesWonWhereMatchedFive());
+
+        //Saves new user stats to the database
+        return this.userStatsRepository.save(updatedUserStats);
     }
 
 }

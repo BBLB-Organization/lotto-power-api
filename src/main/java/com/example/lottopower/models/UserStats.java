@@ -12,7 +12,7 @@ public class UserStats {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer id;
 
-    String emailAddress;
+    String username;
 
     LocalDate joinedDate;
     LocalDate lastSeenDate;
@@ -30,9 +30,9 @@ public class UserStats {
 
     public UserStats(){}
 
-    public UserStats(Integer id, String emailAddress, LocalDate joinedDate, LocalDate lastSeenDate, Integer totalMoneySpent, Integer totalMatchedTwoWinnings, Integer totalMatchedThreeWinnings, Integer totalMatchedFourWinnings, Integer totalMatchedFiveWinnings, Integer totalGamesPlayed, Integer totalGamesWon, Integer totalGamesWonWhereMatchedTwo, Integer totalGamesWonWhereMatchedThree, Integer totalGamesWonWhereMatchedFour, Integer totalGamesWonWhereMatchedFive) {
+    public UserStats(Integer id, String username, LocalDate joinedDate, LocalDate lastSeenDate, Integer totalMoneySpent, Integer totalMatchedTwoWinnings, Integer totalMatchedThreeWinnings, Integer totalMatchedFourWinnings, Integer totalMatchedFiveWinnings, Integer totalGamesPlayed, Integer totalGamesWon, Integer totalGamesWonWhereMatchedTwo, Integer totalGamesWonWhereMatchedThree, Integer totalGamesWonWhereMatchedFour, Integer totalGamesWonWhereMatchedFive) {
         this.id = id;
-        this.emailAddress = emailAddress;
+        this.username = username;
         this.joinedDate = joinedDate;
         this.lastSeenDate = lastSeenDate;
         this.totalMoneySpent = totalMoneySpent;
@@ -56,12 +56,12 @@ public class UserStats {
         this.id = id;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public LocalDate getJoinedDate() {

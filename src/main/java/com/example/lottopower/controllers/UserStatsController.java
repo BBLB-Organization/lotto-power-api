@@ -21,12 +21,12 @@ public class UserStatsController {
     }
 
     @GetMapping
-    public ResponseEntity getUserStats(@RequestBody Users userWithInfo){
+    public ResponseEntity getUserStats(@RequestBody UserStats userWithInfo){
         UserStats userStats = new UserStats();
         Users user = this.userService.getUserByUserName(userWithInfo.getUsername());
         try {
             if (user != null) {
-                userStats = this.userStatsService.getUserStats(user.getEmailAddress());
+                userStats = this.userStatsService.getUserStats(user.getUsername());
                 return new ResponseEntity<>(userStats, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(userStats, HttpStatus.UNAUTHORIZED);
@@ -34,6 +34,23 @@ public class UserStatsController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(userStats, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PutMapping("update")
+    public ResponseEntity updateUserStats(@RequestBody UserStats updatedUserStats){
+        UserStats newUserStats = new UserStats();
+        Users user = this.userService.getUserByUserName(updatedUserStats.getUsername());
+        try {
+            if (user != null) {
+                newUserStats = this.userStatsService.updateUserStats(updatedUserStats);
+                return new ResponseEntity<>(newUserStats, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(newUserStats, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(newUserStats, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 }
