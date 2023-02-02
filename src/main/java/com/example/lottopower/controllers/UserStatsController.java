@@ -20,13 +20,13 @@ public class UserStatsController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity getUserStats(@RequestBody UserStats userWithInfo){
+    @GetMapping("/{username}")
+    public ResponseEntity getUserStats(@PathVariable String username){
         UserStats userStats = new UserStats();
-        Users user = this.userService.getUserByUserName(userWithInfo.getUsername());
+        Users user = this.userService.getUserByUserName(username);
         try {
             if (user != null) {
-                userStats = this.userStatsService.getUserStats(user.getUsername());
+                userStats = this.userStatsService.getUserStats(username);
                 return new ResponseEntity<>(userStats, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(userStats, HttpStatus.UNAUTHORIZED);

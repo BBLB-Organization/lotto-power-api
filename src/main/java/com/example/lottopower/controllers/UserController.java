@@ -50,19 +50,24 @@ public class UserController {
     }
 
     @PostMapping(path = "login", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> checkLoginCredentials(@RequestBody Users user) {
+    public ResponseEntity checkLoginCredentials(@RequestBody Users user) {
         String [] roles = {"ROLE_USER"};
         String token = TokenGenerator.generateToken(user.getEmailAddress(), roles);
         try {
             if (userService.checkLoginCredentials(user.getEmailAddress(), user.getPassword())) {
                 userService.updateAccessTokenForUserLoggedIn(user.getEmailAddress(),token);
-                ObjectMapper objectMapper = new ObjectMapper();
-                String jsonToken = objectMapper.writeValueAsString(token);
-                return new ResponseEntity<>(jsonToken, HttpStatus.OK);
+                //ObjectMapper objectMapper = new ObjectMapper();
+                //String jsonToken = objectMapper.writeValueAsString(token);
+                Users loggedInUser = userService.getUserByEmailAddress(user.getEmailAddress());
+                loggedInUser.setAccessToken(token);
+                loggedInUser.setId(null);
+                loggedInUser.setEmailAddress("");
+                loggedInUser.setPassword("");
+                return new ResponseEntity<>(loggedInUser, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Incorrect Email or Password", HttpStatus.UNAUTHORIZED);
             }
-        } catch (IllegalArgumentException | JsonProcessingException e) {
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
