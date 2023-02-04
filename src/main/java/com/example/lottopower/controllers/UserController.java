@@ -3,6 +3,7 @@ package com.example.lottopower.controllers;
 import com.example.lottopower.config.TokenGenerator;
 import com.example.lottopower.models.Users;
 import com.example.lottopower.services.UserService;
+import com.example.lottopower.services.UserStatsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,13 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
+    private UserStatsService userStatsService;
 
     private static final String ROLE_USER = "ROLE_USER";
 
-    public UserController(UserService userService){
+    public UserController(UserService userService, UserStatsService userStatsService){
         this.userService = userService;
+        this.userStatsService = userStatsService;
     }
 
 
@@ -30,6 +33,9 @@ public class UserController {
     public ResponseEntity registerUser(@RequestBody Users users){
         users.setRoles(ROLE_USER);
         Users user = this.userService.registerUser(users);
+
+        //Create blank user stats for new registered user
+        this.userStatsService.createUserStats(user.getUsername());
 
         HttpStatus status;
         ResponseEntity response;
@@ -44,19 +50,24 @@ public class UserController {
     }
 
     @PostMapping(path = "login", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> checkLoginCredentials(@RequestBody Users user) {
+    public ResponseEntity checkLoginCredentials(@RequestBody Users user) {
         String [] roles = {"ROLE_USER"};
         String token = TokenGenerator.generateToken(user.getEmailAddress(), roles);
         try {
             if (userService.checkLoginCredentials(user.getEmailAddress(), user.getPassword())) {
                 userService.updateAccessTokenForUserLoggedIn(user.getEmailAddress(),token);
-                ObjectMapper objectMapper = new ObjectMapper();
-                String jsonToken = objectMapper.writeValueAsString(token);
-                return new ResponseEntity<>(jsonToken, HttpStatus.OK);
+                //ObjectMapper objectMapper = new ObjectMapper();
+                //String jsonToken = objectMapper.writeValueAsString(token);
+                Users loggedInUser = userService.getUserByEmailAddress(user.getEmailAddress());
+                loggedInUser.setAccessToken(token);
+                loggedInUser.setId(null);
+                loggedInUser.setEmailAddress("");
+                loggedInUser.setPassword("");
+                return new ResponseEntity<>(loggedInUser, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Incorrect Email or Password", HttpStatus.UNAUTHORIZED);
             }
-        } catch (IllegalArgumentException | JsonProcessingException e) {
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
