@@ -1,5 +1,6 @@
 package com.example.lottopower.controllers;
 
+import com.example.lottopower.models.PageOfItems;
 import com.example.lottopower.models.UserLeaderboard;
 import com.example.lottopower.models.UserStats;
 import com.example.lottopower.services.UserLeaderboardService;
@@ -47,9 +48,9 @@ public class UserLeaderboardController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<UserLeaderboard<UserStats>> getPageOfUserLeaderboard( @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam(defaultValue = "10") Integer pageSize){
+    public ResponseEntity<PageOfItems<UserLeaderboard>> getPageOfUserLeaderboard(@RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam(defaultValue = "10") Integer pageSize){
 
-        UserLeaderboard<UserStats> pageOfUserLeaderboard = this.userLeaderboardService.getUserLeaderboard(pageNumber, pageSize);
+        PageOfItems<UserLeaderboard> pageOfUserLeaderboard = this.userLeaderboardService.getUserLeaderboard(pageNumber, pageSize);
 
         try{
             if(pageOfUserLeaderboard != null){

@@ -1,42 +1,66 @@
 package com.example.lottopower.models;
 
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-public class UserLeaderboard<T> {
+@Entity
+public class UserLeaderboard {
 
-    List<T> userStatsList;
-    Boolean hasNext;
-    int totalElements;
+    @Id
+    String username;
 
-    public UserLeaderboard(List<T> userStatsList, Boolean hasNext, int totalElements) {
-        this.userStatsList = userStatsList;
-        this.hasNext = hasNext;
-        this.totalElements = totalElements;
-    }
+    Integer totalGamesPlayed;
+    Integer totalMoneySpent;
+    Integer totalMoneyWon;
+    Boolean hasJackpot;
 
     public UserLeaderboard() {}
 
-    public List<T> getUserStatsList() {
-        return userStatsList;
+    public UserLeaderboard(String username, Integer totalGamesPlayed, Integer totalMoneySpent, Integer totalMoneyWon, Boolean hasJackpot) {
+        this.username = username;
+        this.totalGamesPlayed = totalGamesPlayed;
+        this.totalMoneySpent = totalMoneySpent;
+        this.totalMoneyWon = totalMoneyWon;
+        this.hasJackpot = hasJackpot;
     }
 
-    public void setUserStatsList(List<T> userStatsList) {
-        this.userStatsList = userStatsList;
+    public String getUsername() {
+        return username;
     }
 
-    public Boolean getHasNext() {
-        return hasNext;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setHasNext(Boolean hasNext) {
-        this.hasNext = hasNext;
+    public Integer getTotalGamesPlayed() {
+        return totalGamesPlayed;
     }
 
-    public int getTotalElements() {
-        return totalElements;
+    public void setTotalGamesPlayed(Integer totalGamesPlayed) {
+        this.totalGamesPlayed = totalGamesPlayed;
     }
 
-    public void setTotalElements(int totalElements) {
-        this.totalElements = totalElements;
+    public Integer getTotalMoneySpent() {
+        return totalMoneySpent;
+    }
+
+    public void setTotalMoneySpent(Integer totalMoneySpent) {
+        this.totalMoneySpent = totalMoneySpent;
+    }
+
+    public Integer getTotalMoneyWon() {
+        return totalMoneyWon;
+    }
+
+    public void setTotalMoneyWon(Integer totalMoneyWon) {
+        this.totalMoneyWon = totalMoneyWon;
+    }
+
+    public Boolean getHasJackpot() {
+        return hasJackpot;
+    }
+
+    public void setHasJackpot(Boolean hasJackpot) {
+        this.hasJackpot = hasJackpot;
     }
 }
