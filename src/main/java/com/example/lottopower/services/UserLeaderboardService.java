@@ -87,4 +87,8 @@ public class UserLeaderboardService {
 
     }
 
+    public long getTotalNumberOfPlayers(){
+        return this.userLeaderboardRepository.count();
+    }
+
 }

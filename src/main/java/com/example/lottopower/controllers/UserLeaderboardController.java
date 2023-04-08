@@ -66,4 +66,20 @@ public class UserLeaderboardController {
 
     }
 
+    @GetMapping("total")
+    public ResponseEntity<Long> getTotalNumberOfPlayers(){
+        Long totalNumberOfPlayers = this.userLeaderboardService.getTotalNumberOfPlayers();
+        try{
+            if(totalNumberOfPlayers != null){
+                return new ResponseEntity<>(totalNumberOfPlayers, HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        }
+        catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
